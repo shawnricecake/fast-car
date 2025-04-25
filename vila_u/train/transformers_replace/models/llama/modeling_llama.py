@@ -866,14 +866,9 @@ class LlamaDecoderLayer(nn.Module):
                 # ==================================== whole mlp skip ==========================================
             else:
                 if hidden_states.shape[1] == 1:
-                    # self.cache_if_skip_mlp.append(
-                    #     torch.zeros((residual.shape[0],1), device=residual.device) == 1
-                    # )
-                    # mlp_ablation
                     self.cache_if_skip_mlp.append(
-                        torch.zeros((residual.shape[0], 32, 1), device=residual.device) == 1
+                        torch.zeros((residual.shape[0],1), device=residual.device) == 1
                     )
-
                     # self.cache_mlp_input.append(residual)
                 hidden_states = self.post_attention_layernorm(hidden_states)
                 hidden_states = self.mlp(hidden_states)
@@ -887,14 +882,9 @@ class LlamaDecoderLayer(nn.Module):
         else:
             residual = hidden_states
             if hidden_states.shape[1] == 1:
-                # self.cache_if_skip_mlp.append(
-                #     torch.zeros((residual.shape[0],1), device=residual.device) == 1
-                # )
-                # mlp_ablation
                 self.cache_if_skip_mlp.append(
-                    torch.zeros((residual.shape[0], 32, 1), device=residual.device) == 1
+                    torch.zeros((residual.shape[0],1), device=residual.device) == 1
                 )
-
                 # self.cache_mlp_input.append(residual)
             hidden_states = self.post_attention_layernorm(hidden_states)
             hidden_states = self.mlp(hidden_states)
