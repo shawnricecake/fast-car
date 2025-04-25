@@ -6,10 +6,11 @@ Fast Auto-Regressive Video Generation"]().
 
 FastCar is the first framework that is specially designed for the acceleration of the auto-regressive video generation models.
 
-FastCar additionally takes the temporal redundancy into consideration compared to the previous efficient techniques for auto-regressive image generation.
+FastCar additionally takes the temporal redundancy into consideration compared to the previous efficient techniques which focus on spatial redundancy for auto-regressive image generation.
 
 FastCar accelerates the video generation by replaying the feedforward layers with the attentive cache of the previous frame.
 
+FastCar provides the complementary efficient technique for sparse attention based approaches.
 
 ## Quick Start
 
