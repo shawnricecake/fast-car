@@ -846,51 +846,24 @@ class LlamaDecoderLayer(nn.Module):
             residual = hidden_states
             if hidden_states.shape[1] == 1 and cache_percent_mlp is not None and len(self.cache_mlp) >= 256:# and \
             # (len(self.cache_mlp) // 256) % 2 == 1:
-                
-                # ==================================== 1 whole mlp ==========================================
-                # # Xuan: compute attn score to judge if skip with cache of same location at previous frame
-                # threshold_mlp = cache_percent_mlp
-                # current_q = self.self_attn.query_cache[-1]
-                # previous_k = present_key_value[0][:, :, -257, :].unsqueeze(2)
-                # attn_scores = (current_q * previous_k).sum(dim=-1) / math.sqrt(128)
-                # attn_scores_mean = attn_scores.mean(dim=1)
-                # # skip_mlp = (attn_scores_mean > threshold_mlp) & (~self.cache_if_skip_mlp[-256]) # Xuan: if previously skip, then we can not skip currently
-                # skip_mlp = attn_scores_mean > threshold_mlp
-                # if torch.all(skip_mlp).item():
-                #     self.cache_if_skip_mlp.append(
-                #         torch.zeros((residual.shape[0],1), device=residual.device) == 0
-                #     )
-                #     self.cache_mlp_input.append(residual)
-                #     hidden_states = residual + self.cache_mlp[-256]
-                #     self.cache_mlp.append(self.cache_mlp[-256])
-                # else:
-                #     self.cache_if_skip_mlp.append(
-                #         torch.zeros((residual.shape[0],1), device=residual.device) == 1
-                #     )
-                #     self.cache_mlp_input.append(residual)
-                #     hidden_states = self.post_attention_layernorm(hidden_states)
-                #     hidden_states = self.mlp(hidden_states)
-                #     self.cache_mlp.append(hidden_states)
-                #     hidden_states = residual + hidden_states
-                # ==================================== 1 whole mlp ==========================================
-                # mlp_ablation here
-                # ==================================== 2 head level ==========================================
-                # Xuan: compute attn score to judge if skip with cache of same location at previous frame in head level
+                # ==================================== whole mlp skip ==========================================
+                # Xuan: compute attn score to judge if skip with cache of same location at previous frame
                 threshold_mlp = cache_percent_mlp
                 current_q = self.self_attn.query_cache[-1]
                 previous_k = present_key_value[0][:, :, -257, :].unsqueeze(2)
                 attn_scores = (current_q * previous_k).sum(dim=-1) / math.sqrt(128)
-                skip_mlp = attn_scores > threshold_mlp
+                attn_scores_mean = attn_scores.mean(dim=1)
+                # skip_mlp = (attn_scores_mean > threshold_mlp) & (~self.cache_if_skip_mlp[-256]) # Xuan: if previously skip, then we can not skip currently
+                skip_mlp = attn_scores_mean > threshold_mlp
                 self.cache_if_skip_mlp.append(skip_mlp)
                 # self.cache_mlp_input.append(residual)
                 hidden_states = self.post_attention_layernorm(hidden_states)
                 hidden_states = self.mlp(hidden_states)
-                skip_mlp = skip_mlp.repeat(1, 128, 1).permute(0, 2, 1)
+                skip_mlp = skip_mlp.unsqueeze(-1).repeat(1, 1, 4096)  # [B, 1, 4096]
                 hidden_states = torch.where(skip_mlp, self.cache_mlp[-256], hidden_states)
                 self.cache_mlp.append(hidden_states)
                 hidden_states = residual + hidden_states
-                # ==================================== 2 head level ==========================================
-
+                # ==================================== whole mlp skip ==========================================
             else:
                 if hidden_states.shape[1] == 1:
                     # self.cache_if_skip_mlp.append(
