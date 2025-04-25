@@ -138,16 +138,8 @@ if __name__ == "__main__":
                     # if torch.all(e).item():
                     #     skipped_attn += 1
                 for e in model.llm.model.layers[i_layer].cache_if_skip_mlp:
-                    if e.shape[0] != 2 and e.shape[1] != 32 and e.shape[2] != 1:
-                        import pdb; pdb.set_trace()
-                    if len(e.shape) > 2:
-                        # head level below
-                        total_mlp += e.shape[0] * e.shape[1]
-                        skipped_mlp += torch.sum(e).item()
-                    else:
-                        total_mlp += 1
-                        if torch.all(e).item():
-                            skipped_mlp += 1
+                    total_mlp += e.shape[0]
+                    skipped_mlp += torch.sum(e).item()
             if total_head > 0:
                 print(f"Skipped Head: {skipped_head}/{total_head}")
                 print(f"Skipped Head Ratio: {100*skipped_head/total_head:.2f}%")
