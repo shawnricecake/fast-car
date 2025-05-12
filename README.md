@@ -17,12 +17,15 @@ FastCar provides the complementary efficient technique for sparse attention base
 ### Model Preparation
 Please follow the instruction of environment setup and download the checkpoint from the [VILA-U](https://github.com/mit-han-lab/vila-u). 
 
-Note: I have put the new model.py in "vila_u/train/transformers_replace/models/llama/modeling_llama.py"
+Note: I have put the new model.py in "vila_u/train/transformers_replace/models/llama/modeling_llama.py".
+
+### Video Generation
+Simply run with `sh run-video-generation.sh`.
 
 ### Evaluation
 Please follow the instruction from [VBench](https://github.com/Vchitect/VBench) to set up the evaluation.
 
-Or simply install with `pip install vbench`
+Or simply install with `pip install vbench`.
 
 Then, use the scrips in `scripts-benchmark` to generate videos for VBench evaluation.
 
