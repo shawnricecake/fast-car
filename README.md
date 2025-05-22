@@ -1,7 +1,7 @@
 # FastCar
 
 This repository provides an overview of all resources for the paper ["FastCar: Cache Attentive Replay for
-Fast Auto-Regressive Video Generation"]().
+Fast Auto-Regressive Video Generation"](https://arxiv.org/abs/2505.14709).
 
 
 FastCar is the first framework that is specially designed for the acceleration of the auto-regressive video generation models.
