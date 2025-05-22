@@ -30,4 +30,13 @@ Or simply install with `pip install vbench`.
 Then, use the scrips in `scripts-benchmark` to generate videos for VBench evaluation.
 
 
-
+## 🔗 BibTeX
+If you find FastCar is interesting, please cite through BibTeX:
+```bibtex
+@article{shen2025fastcar,
+  title={FastCar: Cache Attentive Replay for Fast Auto-Regressive Video Generation on the Edge},
+  author={Shen, Xuan and Ma, Weize and Zhou, Yufa and Tang, Enhao and Xie, Yanyue and Li, Zhengang and Gong, Yifan and Wang, Quanyi and Ding, Henghui and Wang, Yiwei and Wang, Yanzhi and Zhao, Pu and Lin, Jun and Gu, Jiuxiang},
+  journal={arXiv preprint arXiv:2505.14709},
+  year={2025}
+}
+```
